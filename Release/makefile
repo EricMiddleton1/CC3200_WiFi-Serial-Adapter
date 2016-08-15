@@ -13,6 +13,7 @@ ORDERED_OBJS += \
 "./main.obj" \
 "./network_common.obj" \
 "./rom_pin_mux_config.obj" \
+"./task_led.obj" \
 "./task_uart.obj" \
 "./task_wifi.obj" \
 "./uart_if.obj" \
@@ -165,8 +166,8 @@ CPRE288_WiFi.bin: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(EXE_OUTPUTS__QUOTED)$(BIN_OUTPUTS__QUOTED)
-	-$(RM) "main.d" "network_common.d" "rom_pin_mux_config.d" "task_uart.d" "task_wifi.d" "uart_if.d" 
-	-$(RM) "main.obj" "network_common.obj" "rom_pin_mux_config.obj" "task_uart.obj" "task_wifi.obj" "uart_if.obj" 
+	-$(RM) "main.d" "network_common.d" "rom_pin_mux_config.d" "task_led.d" "task_uart.d" "task_wifi.d" "uart_if.d" 
+	-$(RM) "main.obj" "network_common.obj" "rom_pin_mux_config.obj" "task_led.obj" "task_uart.obj" "task_wifi.obj" "uart_if.obj" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

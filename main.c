@@ -38,6 +38,7 @@
 //Custom tasks
 #include "task_uart.h"
 #include "task_wifi.h"
+#include "task_led.h"
 
 #define SSID		"CPRE288 Test AP 2"
 
@@ -80,6 +81,10 @@ void task_wifi() {
 	wifi_init(SSID, strlen(SSID), 1);
 }
 
+int getBoardNumber() {
+
+}
+
 /*
  *  ======== main ========
  */
@@ -90,6 +95,9 @@ int main(void)
 
     //Initialize the pin configuration
     PinMuxConfig();
+
+    //Initialize the LED task
+    led_init();
 
     uart_init();
 

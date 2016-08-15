@@ -36,7 +36,7 @@
 //
 //*****************************************************************************
 
-// This file was automatically generated on 7/30/2016 at 4:38:11 PM
+// This file was automatically generated on 8/15/2016 at 2:21:27 PM
 // by TI PinMux version
 //
 //*****************************************************************************
@@ -59,31 +59,47 @@ void PinMuxConfig(void)
     //
     // Set unused pins to PIN_MODE_0 with the exception of JTAG pins 16,17,19,20
     //
-    MAP_PinModeSet(PIN_04, PIN_MODE_0);
     MAP_PinModeSet(PIN_05, PIN_MODE_0);
     MAP_PinModeSet(PIN_06, PIN_MODE_0);
     MAP_PinModeSet(PIN_07, PIN_MODE_0);
     MAP_PinModeSet(PIN_08, PIN_MODE_0);
     MAP_PinModeSet(PIN_18, PIN_MODE_0);
     MAP_PinModeSet(PIN_21, PIN_MODE_0);
-    MAP_PinModeSet(PIN_45, PIN_MODE_0);
     MAP_PinModeSet(PIN_50, PIN_MODE_0);
     MAP_PinModeSet(PIN_52, PIN_MODE_0);
     MAP_PinModeSet(PIN_53, PIN_MODE_0);
-    MAP_PinModeSet(PIN_55, PIN_MODE_0);
+    MAP_PinModeSet(PIN_57, PIN_MODE_0);
     MAP_PinModeSet(PIN_58, PIN_MODE_0);
     MAP_PinModeSet(PIN_59, PIN_MODE_0);
     MAP_PinModeSet(PIN_60, PIN_MODE_0);
-    MAP_PinModeSet(PIN_61, PIN_MODE_0);
-    MAP_PinModeSet(PIN_62, PIN_MODE_0);
     MAP_PinModeSet(PIN_63, PIN_MODE_0);
 
     //
     // Enable Peripheral Clocks
     //
+    MAP_PRCMPeripheralClkEnable(PRCM_GPIOA0, PRCM_RUN_MODE_CLK);
     MAP_PRCMPeripheralClkEnable(PRCM_GPIOA1, PRCM_RUN_MODE_CLK);
     MAP_PRCMPeripheralClkEnable(PRCM_GPIOA2, PRCM_RUN_MODE_CLK);
+    MAP_PRCMPeripheralClkEnable(PRCM_GPIOA3, PRCM_RUN_MODE_CLK);
     MAP_PRCMPeripheralClkEnable(PRCM_UARTA0, PRCM_RUN_MODE_CLK);
+
+    //
+    // Configure PIN_55 for GPIO Input
+    //
+    MAP_PinTypeGPIO(PIN_55, PIN_MODE_0, false);
+    MAP_GPIODirModeSet(GPIOA0_BASE, 0x2, GPIO_DIR_MODE_IN);
+
+    //
+    // Configure PIN_61 for GPIO Input
+    //
+    MAP_PinTypeGPIO(PIN_61, PIN_MODE_0, false);
+    MAP_GPIODirModeSet(GPIOA0_BASE, 0x40, GPIO_DIR_MODE_IN);
+
+    //
+    // Configure PIN_62 for GPIO Input
+    //
+    MAP_PinTypeGPIO(PIN_62, PIN_MODE_0, false);
+    MAP_GPIODirModeSet(GPIOA0_BASE, 0x80, GPIO_DIR_MODE_IN);
 
     //
     // Configure PIN_64 for GPIO Output
@@ -110,12 +126,18 @@ void PinMuxConfig(void)
     MAP_GPIODirModeSet(GPIOA2_BASE, 0x40, GPIO_DIR_MODE_IN);
 
     //
-    // Configure PIN_55 for UART0 UART0_TX
+    // Configure PIN_45 for GPIO Input
     //
-    MAP_PinTypeUART(PIN_55, PIN_MODE_3);
+    MAP_PinTypeGPIO(PIN_45, PIN_MODE_0, false);
+    MAP_GPIODirModeSet(GPIOA3_BASE, 0x80, GPIO_DIR_MODE_IN);
 
     //
-    // Configure PIN_57 for UART0 UART0_RX
+    // Configure PIN_03 for UART0 UART0_TX
     //
-    MAP_PinTypeUART(PIN_57, PIN_MODE_3);
+    MAP_PinTypeUART(PIN_03, PIN_MODE_7);
+
+    //
+    // Configure PIN_04 for UART0 UART0_RX
+    //
+    MAP_PinTypeUART(PIN_04, PIN_MODE_7);
 }

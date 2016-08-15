@@ -36,6 +36,7 @@ OsiTaskHandle _socketTaskHandle;
 //Local prototypes
 void task_socket();
 int waitForClient(int listenSocket, SlSockAddr_t* clientAddr, SlSocklen_t addrLen);
+int makeSocketNonblocking(int socket);
 
 int wifi_init(char *ssid, int ssidLen, uint8_t channel) {
 	//Ititialize WiFi subsystem using blocking call
@@ -230,9 +231,7 @@ void task_socket() {
 		_socketState = LISTENING;
 
 		//Make socket nonblocking
-		long nonBlocking = 1;
-		if(sl_SetSockOpt(listenSocket, SL_SOL_SOCKET, SL_SO_NONBLOCKING,
-				&nonBlocking, sizeof(nonBlocking)) < 0) {
+		if(makeSocketNonblocking(listenSocket) < 0) {
 			Message("[Error] Unable to make socket nonblocking\r\n");
 
 			osi_Sleep(10);
@@ -257,30 +256,41 @@ void task_socket() {
 
 			Message("[Info] Client connected\r\n");
 
+			//Make socket nonblocking
+			if(makeSocketNonblocking(_clientSocket) < 0) {
+				Message("[Error] Unable to make client socket nonblocking\r\n");
+
+				osi_Sleep(10);
+
+				sl_Close(_clientSocket);
+
+				continue;
+			}
+
 			//Update state
 			_socketState = CONNECTED;
 
 			int retval = 1;
-			while(retval > 0 || retval == SL_EAGAIN) {
+			while(_apState == CONNECTED_WITH_IP && (retval > 0 || retval == SL_EAGAIN)) {
 				uint8_t recvBuffer[RECV_BUFFER_SIZE];
 
-				//Wait for characters over TCP connection
-				//Will return 0 if client disconnects
+				//Fetch characters from TCP receive buffer
+				//Will return SL_EAGAIN if no characters in buffer
+				//Or 0 if client has disconnected
 				retval = sl_Recv(_clientSocket, recvBuffer, RECV_BUFFER_SIZE, 0);
 
 				if(retval > 0) {
+					//Set activity LED
+					led_setActivity();
+
 					uart_send(recvBuffer, retval);
 				}
-				else if(retval == SL_EAGAIN) {
-					//This shouldn't be happening with a blocking socket
-					//But it is??
-					Message("[Warning] sl_Recv returned SL_EAGAIN\r\n");
-
-				}
-				else if(retval != 0) {
+				else if(retval != 0 && retval != SL_EAGAIN) {
 					sprintf(buffer, "[Warning] sl_Recv returned %d\r\n", retval);
 					Message(buffer);
 				}
+
+				osi_Sleep(1);
 			}
 
 			Message("[Info] Client disconnected\r\n");
@@ -325,14 +335,17 @@ int waitForClient(int listenSocket, SlSockAddr_t* clientAddr, SlSocklen_t addrLe
 		osi_Sleep(1);
 	}
 
-	if(clientSocket >= 0) {
-		//Make socket blocking
-		long nonBlocking = 0;
-		if(sl_SetSockOpt(clientSocket, SL_SOL_SOCKET, SL_SO_NONBLOCKING,
-				&nonBlocking, sizeof(nonBlocking)) < 0) {
-			Message("[Warning] Unable to make socket blocking\r\n");
-		}
-	}
-
 	return clientSocket;
+}
+
+int makeSocketNonblocking(int socket) {
+	long nonBlocking = 1;
+	if(sl_SetSockOpt(socket, SL_SOL_SOCKET, SL_SO_NONBLOCKING,
+			&nonBlocking, sizeof(nonBlocking)) < 0) {
+
+		return -1;
+	}
+	else {
+		return 0;
+	}
 }

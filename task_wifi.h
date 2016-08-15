@@ -12,6 +12,7 @@
 #include <stdlib.h>
 
 #include "simplelink.h"
+#include "task_led.h"
 
 #define WIFI_ERROR_START	-1
 

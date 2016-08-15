@@ -44,6 +44,32 @@
 #ifndef __PIN_MUX_CONFIG_H__
 #define __PIN_MUX_CONFIG_H__
 
+#include "hw_types.h"
+#include "hw_memmap.h"
+#include "hw_gpio.h"
+#include "pin.h"
+#include "gpio.h"
+
+#include "prcm.h"
+#include "rom.h"
+#include "rom_map.h"
+
+
+#define LED_PORT	GPIOA1_BASE
+
+#define LED_RED		0x2
+#define LED_ORANGE	0x4
+#define LED_GREEN	0x8
+
+#define ADDR0_PORT	GPIOA0_BASE
+#define ADDR0_PIN	0x2
+
+#define ADDR1_PORT	GPIOA0_BASE
+#define ADDR1_PIN	0x40
+
+#define ADDR2_PORT	GPIOA0_BASE
+#define ADDR2_PIN	GPIO!
+
 extern void PinMuxConfig(void);
 
 #endif //  __PIN_MUX_CONFIG_H__

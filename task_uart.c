@@ -37,11 +37,17 @@ void task_uart() {
 
 	while(1) {
 		//Wait for character
-		while(UARTCharsAvail(UART_ADDR)) {
-			long c = UARTCharGetNonBlocking(UART_ADDR);
+		if(UARTCharsAvail(UART_ADDR)) {
+			//Set activity LED
+			led_setActivity();
 
-			//Send it over the network if connected
-			wifi_send(c);
+			while(UARTCharsAvail(UART_ADDR)) {
+				long c = UARTCharGetNonBlocking(UART_ADDR);
+
+
+				//Send it over the network if connected
+				wifi_send(c);
+			}
 		}
 
 		osi_Sleep(1);
