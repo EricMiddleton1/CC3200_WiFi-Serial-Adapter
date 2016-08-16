@@ -68,7 +68,18 @@
 #define ADDR1_PIN	0x40
 
 #define ADDR2_PORT	GPIOA0_BASE
-#define ADDR2_PIN	GPIO!
+#define ADDR2_PIN	0x80
+
+/*
+#define ADDR3_PORT	GPIOA2_BASE
+#define ADDR3_PIN	0x40
+*/
+
+#define ADDR4_PORT	GPIOA3_BASE
+#define ADDR4_PIN	0x80
+
+#define ADDR3_PORT	ADDR4_PORT
+#define ADDR3_PIN	ADDR4_PIN
 
 extern void PinMuxConfig(void);
 

@@ -314,10 +314,10 @@ void task_socket() {
 	Message("[Info] Exiting socket task\r\n");
 }
 
-int wifi_send(char c) {
+int wifi_send(char *buffer, int size) {
 	if(_socketState == CONNECTED) {
 		//Send the character
-		sl_Send(_clientSocket, &c, 1, 0);
+		sl_Send(_clientSocket, buffer, size, 0);
 
 		return 0;
 	}

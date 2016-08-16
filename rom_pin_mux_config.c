@@ -88,18 +88,21 @@ void PinMuxConfig(void)
     //
     MAP_PinTypeGPIO(PIN_55, PIN_MODE_0, false);
     MAP_GPIODirModeSet(GPIOA0_BASE, 0x2, GPIO_DIR_MODE_IN);
+    PinConfigSet(PIN_55, PIN_STRENGTH_2MA, PIN_TYPE_STD_PU);
 
     //
     // Configure PIN_61 for GPIO Input
     //
     MAP_PinTypeGPIO(PIN_61, PIN_MODE_0, false);
     MAP_GPIODirModeSet(GPIOA0_BASE, 0x40, GPIO_DIR_MODE_IN);
+    PinConfigSet(PIN_61, PIN_STRENGTH_2MA, PIN_TYPE_STD_PU);
 
     //
     // Configure PIN_62 for GPIO Input
     //
     MAP_PinTypeGPIO(PIN_62, PIN_MODE_0, false);
     MAP_GPIODirModeSet(GPIOA0_BASE, 0x80, GPIO_DIR_MODE_IN);
+    PinConfigSet(PIN_62, PIN_STRENGTH_2MA, PIN_TYPE_STD_PU);
 
     //
     // Configure PIN_64 for GPIO Output
@@ -124,12 +127,14 @@ void PinMuxConfig(void)
     //
     MAP_PinTypeGPIO(PIN_15, PIN_MODE_0, false);
     MAP_GPIODirModeSet(GPIOA2_BASE, 0x40, GPIO_DIR_MODE_IN);
+    PinConfigSet(PIN_15, PIN_STRENGTH_2MA, PIN_TYPE_STD_PU);
 
     //
     // Configure PIN_45 for GPIO Input
     //
     MAP_PinTypeGPIO(PIN_45, PIN_MODE_0, false);
     MAP_GPIODirModeSet(GPIOA3_BASE, 0x80, GPIO_DIR_MODE_IN);
+    PinConfigSet(PIN_45, PIN_STRENGTH_2MA, PIN_TYPE_STD_PU);
 
     //
     // Configure PIN_03 for UART0 UART0_TX

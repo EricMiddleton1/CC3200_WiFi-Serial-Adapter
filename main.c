@@ -40,7 +40,7 @@
 #include "task_wifi.h"
 #include "task_led.h"
 
-#define SSID		"CPRE288 Test AP 2"
+char SSID[33];
 
 
 //*****************************************************************************
@@ -82,7 +82,13 @@ void task_wifi() {
 }
 
 int getBoardNumber() {
+	int number = ( (!GPIOPinRead(ADDR4_PORT, ADDR4_PIN)) << 4 ) |
+				( (!GPIOPinRead(ADDR3_PORT, ADDR3_PIN)) << 3 ) |
+				( (!GPIOPinRead(ADDR2_PORT, ADDR2_PIN)) << 2 ) |
+				( (!GPIOPinRead(ADDR1_PORT, ADDR1_PIN)) << 1 ) |
+				( (!GPIOPinRead(ADDR0_PORT, ADDR0_PIN)) << 0 );
 
+	return number;
 }
 
 /*
@@ -95,6 +101,9 @@ int main(void)
 
     //Initialize the pin configuration
     PinMuxConfig();
+
+    //Determine SSID
+    sprintf(SSID, "cyBOT %d", getBoardNumber() + 1);
 
     //Initialize the LED task
     led_init();

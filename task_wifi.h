@@ -35,7 +35,7 @@ extern volatile SockState_e _socketState;
 
 int wifi_init(char *ssid, int ssidLen, uint8_t channel);
 
-int wifi_send(char c);
+int wifi_send(char* buffer, int size);
 
 
 #endif /* TASK_WIFI_H_ */
