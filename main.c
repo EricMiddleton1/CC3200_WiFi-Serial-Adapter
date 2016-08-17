@@ -82,7 +82,7 @@ void task_wifi() {
 }
 
 int getBoardNumber() {
-	int number = ( (!GPIOPinRead(ADDR4_PORT, ADDR4_PIN)) << 4 ) |
+	int number = /*( (!GPIOPinRead(ADDR4_PORT, ADDR4_PIN)) << 4 ) |*/
 				( (!GPIOPinRead(ADDR3_PORT, ADDR3_PIN)) << 3 ) |
 				( (!GPIOPinRead(ADDR2_PORT, ADDR2_PIN)) << 2 ) |
 				( (!GPIOPinRead(ADDR1_PORT, ADDR1_PIN)) << 1 ) |

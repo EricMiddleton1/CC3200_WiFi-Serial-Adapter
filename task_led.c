@@ -8,7 +8,7 @@
 
 #include "task_led.h"
 
-#define LED_STACK_SIZE		512
+#define LED_STACK_SIZE		1024
 
 #define ACTIVITY_RATE		25
 #define BLINK_RATE			500
@@ -44,6 +44,13 @@ void task_led() {
 		int update = 0;
 
 		if(blinkTick == 0) {
+			/*
+			//For debugging purposes
+			char buffer[32];
+			sprintf(buffer, "Device ID: %d\r\n", getBoardNumber());
+			wifi_send(buffer, strlen(buffer));
+			*/
+
 			//Determine green LED state
 			if(_apState == UNINITIALIZED) {
 				leds &= ~LED_GREEN; //Off

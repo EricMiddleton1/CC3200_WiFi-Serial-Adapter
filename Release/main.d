@@ -8,9 +8,10 @@ main.obj: C:/ti/CC3200SDK_1.2.0/cc3200-sdk/simplelink/include/simplelink.h
 main.obj: C:/ti/CC3200SDK_1.2.0/cc3200-sdk/simplelink/include/../user.h
 main.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/string.h
 main.obj: C:/ti/CC3200SDK_1.2.0/cc3200-sdk/simplelink/include/../cc_pal.h
+main.obj: C:/ti/CC3200SDK_1.2.0/cc3200-sdk/simplelink_extlib/provisioninglib/provisioning_api.h
+main.obj: C:/ti/CC3200SDK_1.2.0/cc3200-sdk/simplelink/include/simplelink.h
 main.obj: C:/ti/CC3200SDK_1.2.0/cc3200-sdk/oslib/osi.h
 main.obj: C:/ti/CC3200SDK_1.2.0/cc3200-sdk/simplelink/include/../source/objInclusion.h
-main.obj: C:/ti/CC3200SDK_1.2.0/cc3200-sdk/simplelink/include/simplelink.h
 main.obj: C:/ti/CC3200SDK_1.2.0/cc3200-sdk/simplelink/include/trace.h
 main.obj: C:/ti/CC3200SDK_1.2.0/cc3200-sdk/simplelink/include/fs.h
 main.obj: C:/ti/CC3200SDK_1.2.0/cc3200-sdk/simplelink/include/socket.h
@@ -52,9 +53,10 @@ C:/ti/CC3200SDK_1.2.0/cc3200-sdk/simplelink/include/simplelink.h:
 C:/ti/CC3200SDK_1.2.0/cc3200-sdk/simplelink/include/../user.h: 
 C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/string.h: 
 C:/ti/CC3200SDK_1.2.0/cc3200-sdk/simplelink/include/../cc_pal.h: 
+C:/ti/CC3200SDK_1.2.0/cc3200-sdk/simplelink_extlib/provisioninglib/provisioning_api.h: 
+C:/ti/CC3200SDK_1.2.0/cc3200-sdk/simplelink/include/simplelink.h: 
 C:/ti/CC3200SDK_1.2.0/cc3200-sdk/oslib/osi.h: 
 C:/ti/CC3200SDK_1.2.0/cc3200-sdk/simplelink/include/../source/objInclusion.h: 
-C:/ti/CC3200SDK_1.2.0/cc3200-sdk/simplelink/include/simplelink.h: 
 C:/ti/CC3200SDK_1.2.0/cc3200-sdk/simplelink/include/trace.h: 
 C:/ti/CC3200SDK_1.2.0/cc3200-sdk/simplelink/include/fs.h: 
 C:/ti/CC3200SDK_1.2.0/cc3200-sdk/simplelink/include/socket.h: 
