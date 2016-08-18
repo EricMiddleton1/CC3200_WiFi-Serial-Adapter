@@ -81,6 +81,9 @@
 #define ADDR3_PORT	ADDR4_PORT
 #define ADDR3_PIN	ADDR4_PIN
 
+#define COMMAND_PORT	GPIOA3_BASE
+#define COMMAND_PIN		0x10
+
 extern void PinMuxConfig(void);
 
 #endif //  __PIN_MUX_CONFIG_H__

@@ -35,8 +35,6 @@ void led_init() {
 
 
 void task_led() {
-	Message("[Info] LED task started\r\n");
-
 	while(1) {
 		static uint8_t leds = 0x00;
 		static int blinkTick = 0;
@@ -44,12 +42,6 @@ void task_led() {
 		int update = 0;
 
 		if(blinkTick == 0) {
-			/*
-			//For debugging purposes
-			char buffer[32];
-			sprintf(buffer, "Device ID: %d\r\n", getBoardNumber());
-			wifi_send(buffer, strlen(buffer));
-			*/
 
 			//Determine green LED state
 			if(_apState == UNINITIALIZED) {

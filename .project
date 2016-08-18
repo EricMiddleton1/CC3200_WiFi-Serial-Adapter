@@ -25,13 +25,6 @@
 		<nature>org.eclipse.cdt.core.ccnature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>uart_if.c</name>
-			<type>1</type>
-			<locationURI>CC3200_SDK_ROOT/example/common/uart_if.c</locationURI>
-		</link>
-	</linkedResources>
 	<variableList>
 		<variable>
 			<name>CC3200_SDK_ROOT</name>

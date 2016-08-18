@@ -9,12 +9,14 @@
 #define TASK_UART_H_
 
 #include "hw_memmap.h"
+#include "pin_mux_config.h"
 #include "hw_types.h"
 #include "rom_map.h"
 #include "uart.h"
 #include "task_wifi.h"
 #include "prcm.h"
 #include "task_led.h"
+#include "command.h"
 
 
 void uart_init(void);

@@ -37,8 +37,15 @@ OsiTaskHandle _socketTaskHandle;
 void task_socket();
 int waitForClient(int listenSocket, SlSockAddr_t* clientAddr, SlSocklen_t addrLen);
 int makeSocketNonblocking(int socket);
+int getBoardNumber();
 
-int wifi_init(char *ssid, int ssidLen, uint8_t channel) {
+int wifi_start(char *psk, int pskLen) {
+
+	if(_apState != UNINITIALIZED) {
+		//Turn off WiFi before starting it again
+		wifi_stop();
+	}
+
 	//Ititialize WiFi subsystem using blocking call
 	//May take tens of milliseconds
 	if(sl_Start(0, 0, 0) == 0) {
@@ -52,8 +59,14 @@ int wifi_init(char *ssid, int ssidLen, uint8_t channel) {
 	//Set WLAN mode to AP
 	sl_WlanSetMode(ROLE_AP);
 
+	//Generate SSID and channel number
+	char ssid[32];
+	int boardNumber = getBoardNumber();
+	sprintf(ssid, "cyBOT %d", boardNumber);
+	uint8_t channel = (boardNumber % 11) + 1;
+
 	//Set AP specific configuration settings
-	sl_WlanSet(SL_WLAN_CFG_AP_ID, 0, ssidLen, (unsigned char*)ssid);	//SSID
+	sl_WlanSet(SL_WLAN_CFG_AP_ID, 0, strlen(ssid), (unsigned char*)ssid);	//SSID
 	sl_WlanSet(SL_WLAN_CFG_AP_ID, 3, 1, &channel);						//Channel
 
 	/*	Use default IP settings:
@@ -95,11 +108,18 @@ int wifi_init(char *ssid, int ssidLen, uint8_t channel) {
 			1,
 			&_socketTaskHandle);
 
-	Message("[Info] WiFi setup complete\r\n\r\nSSID: ");
-	Message(ssid);
-	Message("\r\n\r\n");
-
 	return 0;
+}
+
+void wifi_stop() {
+	//Make sure that WiFi is currently on
+	if(_apState != UNINITIALIZED) {
+		//Change AP state
+		_apState = UNINITIALIZED;
+
+		//Stop simplelink
+		sl_Stop(100);
+	}
 }
 
 void SimpleLinkWlanEventHandler(SlWlanEvent_t* event) {
@@ -109,8 +129,6 @@ void SimpleLinkWlanEventHandler(SlWlanEvent_t* event) {
 
 			//Update state
 			_apState = CONNECTED_NO_IP;
-
-			Message("[Info] New station connected\r\n");
 		break;
 
 		case SL_WLAN_STA_DISCONNECTED_EVENT:
@@ -118,54 +136,44 @@ void SimpleLinkWlanEventHandler(SlWlanEvent_t* event) {
 
 			//Update state
 			_apState = DISCONNECTED;
-
-			Message("[Info] Station disconnected\r\n");
 		break;
 
-		default: {
-			char str[2];
-			str[0] = event->Event + '0';
-			str[1] = '\0';
-
-			Message("[Warning] Unknown wlan event: ");
-			Message(str);
-			Message("\r\n");
-		}
+		default:
+			//Unknown event
 		break;
 	}
 }
 
 void SimpleLinkGeneralEventHandler(SlDeviceEvent_t* event) {
 	//This handler should only be called on error
-	Message("[Warning] SimpleLinkGeneralEventHandler: A device error has occurred\r\n");
 }
 
 void SimpleLinkHttpServerCallback(SlHttpServerEvent_t* event, SlHttpServerResponse_t* response) {
-	//TODO
+	//Not using HTTP server right now
 }
 
 void SimpleLinkNetAppEventHandler(SlNetAppEvent_t* event) {
 	switch(event->Event) {
 		case SL_NETAPP_IPV4_IPACQUIRED_EVENT:
-			Message("[Info] Device IPV4 address aquired\r\n");
+			//This device has aquired an IP address
 		break;
 
 		case SL_NETAPP_IP_LEASED_EVENT:
+			//A station has connected and received an IP address
+
 			//Update state
 			_apState = CONNECTED_WITH_IP;
-
-			Message("[Info] IP leased\r\n");
 		break;
 
 		case SL_NETAPP_IP_RELEASED_EVENT:
+			//The connected station has released it's IP address
+
 			//Update state
 			_apState = CONNECTED_NO_IP;
-
-			Message("[Info] IP released\r\n");
 		break;
 
 		default:
-			Message("[Warning] SimpleLinkNetAppEventHandler: Unimplemented event\r\n");
+			//Unknown event
 		break;
 	}
 }
@@ -176,8 +184,6 @@ void SimpleLinkSockEventHandler(SlSockEvent_t* event) {
 }
 
 void task_socket() {
-	Message("[Info] Socket task started\r\n");
-
 	while(_apState != UNINITIALIZED) {
 		int listenSocket;
 		SlSockAddrIn_t listenAddr, clientAddr;
@@ -194,7 +200,7 @@ void task_socket() {
 		listenSocket = sl_Socket(SL_AF_INET, SL_SOCK_STREAM, 0);
 
 		if(listenSocket < 0) {
-			Message("[Error] task_socket: Unable to create listen socket\r\n");
+			//Failed to create listen socket
 
 			osi_Sleep(10);
 
@@ -207,7 +213,7 @@ void task_socket() {
 
 		//Bind the listen socket to the TCP_PORT
 		if(sl_Bind(listenSocket, (SlSockAddr_t*)&listenAddr, sizeof(SlSockAddrIn_t)) < 0) {
-			Message("[Error] task_socket: Unable to bind listen socket to port\r\n");
+			//Failed to bind listening socket to IP address
 
 			sl_Close(listenSocket);
 
@@ -218,7 +224,7 @@ void task_socket() {
 
 		//Start listening
 		if(sl_Listen(listenSocket, 0) < 0) {
-			Message("[Error] Unable to listen\r\n");
+			//Failed to start listening for connections
 
 			sl_Close(listenSocket);
 
@@ -232,7 +238,7 @@ void task_socket() {
 
 		//Make socket nonblocking
 		if(makeSocketNonblocking(listenSocket) < 0) {
-			Message("[Error] Unable to make socket nonblocking\r\n");
+			//Failed to make listen socket nonblocking
 
 			osi_Sleep(10);
 
@@ -242,11 +248,6 @@ void task_socket() {
 		}
 
 		while(_apState == CONNECTED_WITH_IP) {
-			char buffer[64];
-			sprintf(buffer, "%d\r\n", TCP_PORT);
-			Message("[Info] Accepting connections on port ");
-			Message(buffer);
-
 			//Wait for client to connect
 			_clientSocket = waitForClient(listenSocket, (SlSockAddr_t*)&clientAddr, addrLen);
 
@@ -254,11 +255,9 @@ void task_socket() {
 			if(_clientSocket < 0)
 				continue;
 
-			Message("[Info] Client connected\r\n");
-
 			//Make socket nonblocking
 			if(makeSocketNonblocking(_clientSocket) < 0) {
-				Message("[Error] Unable to make client socket nonblocking\r\n");
+				//Failed to make client socket nonblocking
 
 				osi_Sleep(10);
 
@@ -283,17 +282,15 @@ void task_socket() {
 					//Set activity LED
 					led_setActivity();
 
+					//Forward data to UART
 					uart_send(recvBuffer, retval);
 				}
-				else if(retval != 0 && retval != SL_EAGAIN) {
-					sprintf(buffer, "[Warning] sl_Recv returned %d\r\n", retval);
-					Message(buffer);
-				}
 
+				//Sleep to give other tasks processor time
 				osi_Sleep(1);
 			}
 
-			Message("[Info] Client disconnected\r\n");
+			//The client has disconnected here
 
 			//Update state
 			_socketState = LISTENING;
@@ -308,10 +305,8 @@ void task_socket() {
 		//Update state
 		_socketState = STOPPED;
 
-		Message("[Info] No longer accepting connections\r\n");
+		//The listen socket has stopped
 	}
-
-	Message("[Info] Exiting socket task\r\n");
 }
 
 int wifi_send(char *buffer, int size) {
@@ -348,4 +343,14 @@ int makeSocketNonblocking(int socket) {
 	else {
 		return 0;
 	}
+}
+
+int getBoardNumber() {
+	int number = /*( (!GPIOPinRead(ADDR4_PORT, ADDR4_PIN)) << 4 ) |*/
+				( (!GPIOPinRead(ADDR3_PORT, ADDR3_PIN)) << 3 ) |
+				( (!GPIOPinRead(ADDR2_PORT, ADDR2_PIN)) << 2 ) |
+				( (!GPIOPinRead(ADDR1_PORT, ADDR1_PIN)) << 1 ) |
+				( (!GPIOPinRead(ADDR0_PORT, ADDR0_PIN)) << 0 );
+
+	return number;
 }

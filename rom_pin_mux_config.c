@@ -63,7 +63,6 @@ void PinMuxConfig(void)
     MAP_PinModeSet(PIN_06, PIN_MODE_0);
     MAP_PinModeSet(PIN_07, PIN_MODE_0);
     MAP_PinModeSet(PIN_08, PIN_MODE_0);
-    MAP_PinModeSet(PIN_18, PIN_MODE_0);
     MAP_PinModeSet(PIN_21, PIN_MODE_0);
     MAP_PinModeSet(PIN_50, PIN_MODE_0);
     MAP_PinModeSet(PIN_52, PIN_MODE_0);
@@ -135,6 +134,13 @@ void PinMuxConfig(void)
     MAP_PinTypeGPIO(PIN_45, PIN_MODE_0, false);
     MAP_GPIODirModeSet(GPIOA3_BASE, 0x80, GPIO_DIR_MODE_IN);
     PinConfigSet(PIN_45, PIN_STRENGTH_2MA, PIN_TYPE_STD_PU);
+
+    //
+    // Configure PIN_18 for GPIO Input (WiFi Command mode)
+    //
+    MAP_PinTypeGPIO(PIN_18, PIN_MODE_0, false);
+    MAP_GPIODirModeSet(GPIOA3_BASE, 0x10, GPIO_DIR_MODE_IN);
+    PinConfigSet(PIN_18, PIN_STRENGTH_2MA, PIN_TYPE_STD_PD);
 
     //
     // Configure PIN_03 for UART0 UART0_TX

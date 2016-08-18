@@ -40,8 +40,6 @@
 #include "task_wifi.h"
 #include "task_led.h"
 
-char SSID[33];
-
 
 //*****************************************************************************
 //
@@ -77,20 +75,6 @@ BoardInit(void)
     PRCMCC3200MCUInit();
 }
 
-void task_wifi() {
-	wifi_init(SSID, strlen(SSID), 1);
-}
-
-int getBoardNumber() {
-	int number = /*( (!GPIOPinRead(ADDR4_PORT, ADDR4_PIN)) << 4 ) |*/
-				( (!GPIOPinRead(ADDR3_PORT, ADDR3_PIN)) << 3 ) |
-				( (!GPIOPinRead(ADDR2_PORT, ADDR2_PIN)) << 2 ) |
-				( (!GPIOPinRead(ADDR1_PORT, ADDR1_PIN)) << 1 ) |
-				( (!GPIOPinRead(ADDR0_PORT, ADDR0_PIN)) << 0 );
-
-	return number;
-}
-
 /*
  *  ======== main ========
  */
@@ -102,15 +86,10 @@ int main(void)
     //Initialize the pin configuration
     PinMuxConfig();
 
-    //Determine SSID
-    sprintf(SSID, "cyBOT %d", getBoardNumber() + 1);
-
     //Initialize the LED task
     led_init();
 
     uart_init();
-
-    Message("CPRE288 test app\r\n\r\n[Info] Board initialized\r\n");
 
     int retval;
 
@@ -120,21 +99,11 @@ int main(void)
     	for(;;);
     }
 
-    Message("[Info] SimpleLink task started\r\n");
-
-    //Start wifi task
-    retval = osi_TaskCreate(task_wifi, (const signed char*)"WiFi task",
-    		OSI_STACK_SIZE, NULL, 1, NULL);
-
     if(retval < 0) {
     	for(;;);
     }
 
-    Message("[Info] UART task started\r\n");
-
     uart_start();
-
-    Message("[Info] Starting task scheduler\r\n");
 
     //Start task scheduler
     osi_start();
