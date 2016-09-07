@@ -33,6 +33,8 @@ typedef enum {
 extern volatile APState_e _apState;
 extern volatile SockState_e _socketState;
 
+void wifi_init();
+
 int wifi_start(char *psk, int pskLen);
 
 void wifi_stop();

@@ -39,6 +39,20 @@ int waitForClient(int listenSocket, SlSockAddr_t* clientAddr, SlSocklen_t addrLe
 int makeSocketNonblocking(int socket);
 int getBoardNumber();
 
+void wifi_init() {
+	//Update states
+	_apState = UNINITIALIZED;
+	_socketState = STOPPED;
+
+	//Launch the socket task
+	int retval = osi_TaskCreate(task_socket,
+			(const signed char*)"Socket Task",
+			SOCK_STACK_SIZE,
+			NULL,
+			1,
+			&_socketTaskHandle);
+}
+
 int wifi_start(char *psk, int pskLen) {
 
 	if(_apState != UNINITIALIZED) {
@@ -96,17 +110,7 @@ int wifi_start(char *psk, int pskLen) {
 	//Start DHCP server (should start by default)
 	sl_NetAppStart(SL_NET_APP_DHCP_SERVER_ID);
 
-	//Update states
 	_apState = DISCONNECTED;
-	_socketState = STOPPED;
-
-	//Launch the socket task
-	osi_TaskCreate(task_socket,
-			(const signed char*)"Socket Task",
-			SOCK_STACK_SIZE,
-			NULL,
-			1,
-			&_socketTaskHandle);
 
 	return 0;
 }
@@ -184,7 +188,7 @@ void SimpleLinkSockEventHandler(SlSockEvent_t* event) {
 }
 
 void task_socket() {
-	while(_apState != UNINITIALIZED) {
+	while(1) {
 		int listenSocket;
 		SlSockAddrIn_t listenAddr, clientAddr;
 		SlSocklen_t addrLen = sizeof(clientAddr);

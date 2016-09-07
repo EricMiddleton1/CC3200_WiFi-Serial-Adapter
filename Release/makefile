@@ -17,6 +17,7 @@ ORDERED_OBJS += \
 "./task_led.obj" \
 "./task_uart.obj" \
 "./task_wifi.obj" \
+"./uart_if.obj" \
 "../cc3200v1p32.cmd" \
 $(GEN_CMDS__FLAG) \
 -llibc.a \
@@ -145,7 +146,7 @@ BIN_OUTPUTS__QUOTED += \
 all: CPRE288_WiFi.out
 
 dependents:
-	-cd C:/ti/CC3200SDK_1.2.0/cc3200-sdk/ti_rtos/ti_rtos_config/ccs/Default && $(MAKE) clean all
+	-cd C:/ti/CC3200SDK_1.2.0/cc3200-sdk/ti_rtos/ti_rtos_config/ccs/Default && $(MAKE) all
 
 # Tool invocations
 CPRE288_WiFi.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS) C:/ti/CC3200SDK_1.2.0/cc3200-sdk/ti_rtos/ti_rtos_config/ccs/Default/configPkg/linker.cmd
@@ -166,8 +167,8 @@ CPRE288_WiFi.bin: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(EXE_OUTPUTS__QUOTED)$(BIN_OUTPUTS__QUOTED)
-	-$(RM) "command.d" "main.d" "network_common.d" "rom_pin_mux_config.d" "task_led.d" "task_uart.d" "task_wifi.d" 
-	-$(RM) "command.obj" "main.obj" "network_common.obj" "rom_pin_mux_config.obj" "task_led.obj" "task_uart.obj" "task_wifi.obj" 
+	-$(RM) "command.d" "main.d" "network_common.d" "rom_pin_mux_config.d" "task_led.d" "task_uart.d" "task_wifi.d" "uart_if.d" 
+	-$(RM) "command.obj" "main.obj" "network_common.obj" "rom_pin_mux_config.obj" "task_led.obj" "task_uart.obj" "task_wifi.obj" "uart_if.obj" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

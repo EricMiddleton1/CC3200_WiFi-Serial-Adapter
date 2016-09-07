@@ -89,7 +89,11 @@ int main(void)
     //Initialize the LED task
     led_init();
 
+    //Initialize the uart task
     uart_init();
+
+    //Initialize WiFi task
+    wifi_init();
 
     int retval;
 

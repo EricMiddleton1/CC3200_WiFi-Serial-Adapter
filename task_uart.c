@@ -162,6 +162,14 @@ void task_uart() {
 }
 
 void uart_send(char* buf, int length) {
+	//Check for command flag
+	if(GPIOPinRead(COMMAND_PORT, COMMAND_PIN)) {
+		//Don't send if in command mode
+		return;
+
+		//TODO: buffer this data until command mode is released
+	}
+
 	char *end;
 
 	for(end = buf + length; buf != end; buf++) {

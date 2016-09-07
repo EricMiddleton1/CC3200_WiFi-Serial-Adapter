@@ -13,7 +13,8 @@ C_SRCS += \
 ../rom_pin_mux_config.c \
 ../task_led.c \
 ../task_uart.c \
-../task_wifi.c 
+../task_wifi.c \
+C:/ti/CC3200SDK_1.2.0/cc3200-sdk/example/common/uart_if.c 
 
 OBJS += \
 ./command.obj \
@@ -22,7 +23,8 @@ OBJS += \
 ./rom_pin_mux_config.obj \
 ./task_led.obj \
 ./task_uart.obj \
-./task_wifi.obj 
+./task_wifi.obj \
+./uart_if.obj 
 
 C_DEPS += \
 ./command.d \
@@ -31,7 +33,8 @@ C_DEPS += \
 ./rom_pin_mux_config.d \
 ./task_led.d \
 ./task_uart.d \
-./task_wifi.d 
+./task_wifi.d \
+./uart_if.d 
 
 C_DEPS__QUOTED += \
 "command.d" \
@@ -40,7 +43,8 @@ C_DEPS__QUOTED += \
 "rom_pin_mux_config.d" \
 "task_led.d" \
 "task_uart.d" \
-"task_wifi.d" 
+"task_wifi.d" \
+"uart_if.d" 
 
 OBJS__QUOTED += \
 "command.obj" \
@@ -49,7 +53,8 @@ OBJS__QUOTED += \
 "rom_pin_mux_config.obj" \
 "task_led.obj" \
 "task_uart.obj" \
-"task_wifi.obj" 
+"task_wifi.obj" \
+"uart_if.obj" 
 
 C_SRCS__QUOTED += \
 "../command.c" \
@@ -58,6 +63,7 @@ C_SRCS__QUOTED += \
 "../rom_pin_mux_config.c" \
 "../task_led.c" \
 "../task_uart.c" \
-"../task_wifi.c" 
+"../task_wifi.c" \
+"C:/ti/CC3200SDK_1.2.0/cc3200-sdk/example/common/uart_if.c" 
 
 
