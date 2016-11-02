@@ -129,7 +129,7 @@ void task_uart() {
 					switch(command->type) {
 						case WIFI_START:
 							//Start WiFi system
-							wifi_start((char*)command->param, command->length);
+							retval = wifi_start((char*)command->param, command->length);
 						break;
 
 						case WIFI_STOP:

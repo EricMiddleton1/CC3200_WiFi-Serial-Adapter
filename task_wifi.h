@@ -14,7 +14,7 @@
 #include "simplelink.h"
 #include "task_led.h"
 
-#define WIFI_ERROR_START	-1
+#define WIFI_ERROR_START	255
 
 //State enums
 typedef enum {
@@ -35,7 +35,7 @@ extern volatile SockState_e _socketState;
 
 void wifi_init();
 
-int wifi_start(char *psk, int pskLen);
+uint8_t wifi_start(char *psk, int pskLen);
 
 void wifi_stop();
 

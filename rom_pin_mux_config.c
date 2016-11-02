@@ -36,7 +36,7 @@
 //
 //*****************************************************************************
 
-// This file was automatically generated on 8/15/2016 at 2:21:27 PM
+// This file was automatically generated on 9/26/2016 at 2:42:22 PM
 // by TI PinMux version
 //
 //*****************************************************************************
@@ -63,7 +63,7 @@ void PinMuxConfig(void)
     MAP_PinModeSet(PIN_06, PIN_MODE_0);
     MAP_PinModeSet(PIN_07, PIN_MODE_0);
     MAP_PinModeSet(PIN_08, PIN_MODE_0);
-    MAP_PinModeSet(PIN_21, PIN_MODE_0);
+    MAP_PinModeSet(PIN_18, PIN_MODE_0);
     MAP_PinModeSet(PIN_50, PIN_MODE_0);
     MAP_PinModeSet(PIN_52, PIN_MODE_0);
     MAP_PinModeSet(PIN_53, PIN_MODE_0);
@@ -71,6 +71,8 @@ void PinMuxConfig(void)
     MAP_PinModeSet(PIN_58, PIN_MODE_0);
     MAP_PinModeSet(PIN_59, PIN_MODE_0);
     MAP_PinModeSet(PIN_60, PIN_MODE_0);
+    MAP_PinModeSet(PIN_61, PIN_MODE_0);
+    MAP_PinModeSet(PIN_62, PIN_MODE_0);
     MAP_PinModeSet(PIN_63, PIN_MODE_0);
 
     //
@@ -82,65 +84,65 @@ void PinMuxConfig(void)
     MAP_PRCMPeripheralClkEnable(PRCM_GPIOA3, PRCM_RUN_MODE_CLK);
     MAP_PRCMPeripheralClkEnable(PRCM_UARTA0, PRCM_RUN_MODE_CLK);
 
-    //
+    //	ADDR1
     // Configure PIN_55 for GPIO Input
     //
     MAP_PinTypeGPIO(PIN_55, PIN_MODE_0, false);
     MAP_GPIODirModeSet(GPIOA0_BASE, 0x2, GPIO_DIR_MODE_IN);
     PinConfigSet(PIN_55, PIN_STRENGTH_2MA, PIN_TYPE_STD_PU);
 
-    //
-    // Configure PIN_61 for GPIO Input
-    //
-    MAP_PinTypeGPIO(PIN_61, PIN_MODE_0, false);
-    MAP_GPIODirModeSet(GPIOA0_BASE, 0x40, GPIO_DIR_MODE_IN);
-    PinConfigSet(PIN_61, PIN_STRENGTH_2MA, PIN_TYPE_STD_PU);
-
-    //
-    // Configure PIN_62 for GPIO Input
-    //
-    MAP_PinTypeGPIO(PIN_62, PIN_MODE_0, false);
-    MAP_GPIODirModeSet(GPIOA0_BASE, 0x80, GPIO_DIR_MODE_IN);
-    PinConfigSet(PIN_62, PIN_STRENGTH_2MA, PIN_TYPE_STD_PU);
-
-    //
+    //	LED_RED
     // Configure PIN_64 for GPIO Output
     //
     MAP_PinTypeGPIO(PIN_64, PIN_MODE_0, false);
     MAP_GPIODirModeSet(GPIOA1_BASE, 0x2, GPIO_DIR_MODE_OUT);
 
-    //
+    //	LED_ORANGE
     // Configure PIN_01 for GPIO Output
     //
     MAP_PinTypeGPIO(PIN_01, PIN_MODE_0, false);
     MAP_GPIODirModeSet(GPIOA1_BASE, 0x4, GPIO_DIR_MODE_OUT);
 
-    //
+    //	LED_GREEN
     // Configure PIN_02 for GPIO Output
     //
     MAP_PinTypeGPIO(PIN_02, PIN_MODE_0, false);
     MAP_GPIODirModeSet(GPIOA1_BASE, 0x8, GPIO_DIR_MODE_OUT);
 
-    //
+    //	ADDR2
     // Configure PIN_15 for GPIO Input
     //
     MAP_PinTypeGPIO(PIN_15, PIN_MODE_0, false);
     MAP_GPIODirModeSet(GPIOA2_BASE, 0x40, GPIO_DIR_MODE_IN);
     PinConfigSet(PIN_15, PIN_STRENGTH_2MA, PIN_TYPE_STD_PU);
 
+    //	ADDR3
+    // Configure PIN_16 for GPIO Input
     //
+    MAP_PinTypeGPIO(PIN_16, PIN_MODE_0, false);
+    MAP_GPIODirModeSet(GPIOA2_BASE, 0x80, GPIO_DIR_MODE_IN);
+    PinConfigSet(PIN_16, PIN_STRENGTH_2MA, PIN_TYPE_STD_PU);
+
+    //	ADDR4
+    // Configure PIN_17 for GPIO Input
+    //
+    MAP_PinTypeGPIO(PIN_17, PIN_MODE_0, false);
+    MAP_GPIODirModeSet(GPIOA3_BASE, 0x1, GPIO_DIR_MODE_IN);
+    PinConfigSet(PIN_17, PIN_STRENGTH_2MA, PIN_TYPE_STD_PU);
+
+    //	COMMAND PIN
+    // Configure PIN_18 for GPIO Input
+    //
+    MAP_PinTypeGPIO(PIN_18, PIN_MODE_0, false);
+    MAP_GPIODirModeSet(GPIOA3_BASE, 0x10, GPIO_DIR_MODE_IN);
+    PinConfigSet(PIN_18, PIN_STRENGTH_2MA, PIN_TYPE_STD_PD);
+
+    //	ADDR0
     // Configure PIN_45 for GPIO Input
     //
     MAP_PinTypeGPIO(PIN_45, PIN_MODE_0, false);
     MAP_GPIODirModeSet(GPIOA3_BASE, 0x80, GPIO_DIR_MODE_IN);
     PinConfigSet(PIN_45, PIN_STRENGTH_2MA, PIN_TYPE_STD_PU);
-
-    //
-    // Configure PIN_18 for GPIO Input (WiFi Command mode)
-    //
-    MAP_PinTypeGPIO(PIN_18, PIN_MODE_0, false);
-    MAP_GPIODirModeSet(GPIOA3_BASE, 0x10, GPIO_DIR_MODE_IN);
-    PinConfigSet(PIN_18, PIN_STRENGTH_2MA, PIN_TYPE_STD_PD);
 
     //
     // Configure PIN_03 for UART0 UART0_TX

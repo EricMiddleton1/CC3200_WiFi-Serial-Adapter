@@ -39,6 +39,8 @@ int waitForClient(int listenSocket, SlSockAddr_t* clientAddr, SlSocklen_t addrLe
 int makeSocketNonblocking(int socket);
 int getBoardNumber();
 
+
+
 void wifi_init() {
 	//Update states
 	_apState = UNINITIALIZED;
@@ -53,7 +55,7 @@ void wifi_init() {
 			&_socketTaskHandle);
 }
 
-int wifi_start(char *psk, int pskLen) {
+uint8_t wifi_start(char *psk, int pskLen) {
 
 	if(_apState != UNINITIALIZED) {
 		//Turn off WiFi before starting it again
@@ -62,7 +64,7 @@ int wifi_start(char *psk, int pskLen) {
 
 	//Ititialize WiFi subsystem using blocking call
 	//May take tens of milliseconds
-	if(sl_Start(0, 0, 0) == 0) {
+	if(sl_Start(0, 0, 0) < 0) {
 		//Error starting wifi subsystem
 		return WIFI_ERROR_START;
 	}
@@ -83,6 +85,11 @@ int wifi_start(char *psk, int pskLen) {
 	sl_WlanSet(SL_WLAN_CFG_AP_ID, 0, strlen(ssid), (unsigned char*)ssid);	//SSID
 	sl_WlanSet(SL_WLAN_CFG_AP_ID, 3, 1, &channel);						//Channel
 
+	//Set security settings
+	uint8_t secType = SL_SEC_TYPE_WPA_WPA2;
+	sl_WlanSet(SL_WLAN_CFG_AP_ID, WLAN_AP_OPT_SECURITY_TYPE, 1, &secType); //WPA2
+	sl_WlanSet(SL_WLAN_CFG_AP_ID, WLAN_AP_OPT_PASSWORD, pskLen, psk);
+
 	/*	Use default IP settings:
 	 * 		IP:			192.168.1.1
 	 * 		Gateway: 	192.168.1.1
@@ -90,11 +97,15 @@ int wifi_start(char *psk, int pskLen) {
 	 * 		Subnet:		255.255.255.0
 	 */
 
+	//_NetCfgIpV4Args_t ipV4;
+
 	/*	Use default DHCP server settings:
 	 * 		lease time:		24 hours
 	 * 		IP start:		192.168.1.2
 	 * 		IP end:			192.168.1.254
 	 */
+
+
 
 	/*	Using default URN:
 	 * 		mysimplelink
@@ -102,13 +113,14 @@ int wifi_start(char *psk, int pskLen) {
 
 	//Restart simplelink to allow above changes to take ef
 	sl_Stop(100);
-	if(sl_Start(NULL, NULL, NULL) == 0) {
+	if(sl_Start(NULL, NULL, NULL) < 0) {
 		//Error starting wifi subsystem
 		return WIFI_ERROR_START;
 	}
 
 	//Start DHCP server (should start by default)
 	sl_NetAppStart(SL_NET_APP_DHCP_SERVER_ID);
+	//sl_NetCfgSet(SL_IPV4_STA_P2P_CL_DHCP_ENABLE)
 
 	_apState = DISCONNECTED;
 
@@ -350,7 +362,7 @@ int makeSocketNonblocking(int socket) {
 }
 
 int getBoardNumber() {
-	int number = /*( (!GPIOPinRead(ADDR4_PORT, ADDR4_PIN)) << 4 ) |*/
+	int number = ( (!GPIOPinRead(ADDR4_PORT, ADDR4_PIN)) << 4 ) |
 				( (!GPIOPinRead(ADDR3_PORT, ADDR3_PIN)) << 3 ) |
 				( (!GPIOPinRead(ADDR2_PORT, ADDR2_PIN)) << 2 ) |
 				( (!GPIOPinRead(ADDR1_PORT, ADDR1_PIN)) << 1 ) |
