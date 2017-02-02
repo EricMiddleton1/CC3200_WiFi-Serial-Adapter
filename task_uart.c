@@ -21,8 +21,6 @@ void uart_intHandler();
 typedef struct {
 	char buffer[BUFFER_SIZE];
 	int size;
-
-	int commandFlag;
 } UARTBuffer_t;
 
 //UART Rx buffers
@@ -32,10 +30,8 @@ int _bufferSwitch;
 void uart_init() {
 	//Initialize the buffers
 	_rxBuffers[0].size = 0;
-	_rxBuffers[0].commandFlag = -1;
 
 	_rxBuffers[1].size = 0;
-	_rxBuffers[1].commandFlag = -1;
 
 	_bufferSwitch = 0;
 
@@ -80,13 +76,6 @@ void uart_intHandler() {
 		//Get current rx buffer
 		UARTBuffer_t *curBuffer = &(_rxBuffers[_bufferSwitch]);
 
-		//Check for command mode flag
-		int commandSet = GPIOPinRead(COMMAND_PORT, COMMAND_PIN);
-		if((curBuffer->commandFlag == -1) && commandSet) {
-			//Set command mode flag
-			curBuffer->commandFlag = curBuffer->size;
-		}
-
 		//Get all characters in FIFO
 		while(UARTCharsAvail(UART_ADDR)) {
 			curBuffer->buffer[curBuffer->size++] = UARTCharGet(UART_ADDR);
@@ -110,48 +99,11 @@ void task_uart() {
 			//Set activity LED
 			led_setActivity();
 
-			//Check for the command flag
-			if(curBuffer->commandFlag != -1) {
-				//Send everything from before the command flag was set
-				wifi_send(curBuffer->buffer, curBuffer->commandFlag);
-
-				//Process the command
-				Command_t* command;
-				uint8_t retval = COMMAND_RET_INPROGRESS;
-				int i;
-				for(i = curBuffer->commandFlag; i < curBuffer->size && retval == COMMAND_RET_INPROGRESS; i++) {
-					retval = command_processChar(curBuffer->buffer[i], &command);
-				}
-
-				if(retval == COMMAND_RET_SUCCESS) {
-					//We have a finished command
-
-					switch(command->type) {
-						case WIFI_START:
-							//Start WiFi system
-							retval = wifi_start((char*)command->param, command->length);
-						break;
-
-						case WIFI_STOP:
-							//Stop WiFi system
-							wifi_stop();
-						break;
-					}
-				}
-
-				if(retval != COMMAND_RET_INPROGRESS) {
-					//Send return value
-					UARTCharPut(UART_ADDR, retval);
-				}
-			}
-			else {
-				//Send the data over WiFi
-				wifi_send(curBuffer->buffer, curBuffer->size);
-			}
+			//Send the data over WiFi
+			wifi_send(curBuffer->buffer, curBuffer->size);
 
 			//Clear the buffer
 			curBuffer->size = 0;
-			curBuffer->commandFlag = -1;
 
 			//Swap buffer pointer
 			curBuffer = &(_rxBuffers[_bufferSwitch]);
@@ -162,14 +114,6 @@ void task_uart() {
 }
 
 void uart_send(char* buf, int length) {
-	//Check for command flag
-	if(GPIOPinRead(COMMAND_PORT, COMMAND_PIN)) {
-		//Don't send if in command mode
-		return;
-
-		//TODO: buffer this data until command mode is released
-	}
-
 	char *end;
 
 	for(end = buf + length; buf != end; buf++) {

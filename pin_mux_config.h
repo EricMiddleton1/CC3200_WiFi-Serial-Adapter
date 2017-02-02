@@ -61,24 +61,6 @@
 #define LED_ORANGE	0x4
 #define LED_GREEN	0x8
 
-#define ADDR0_PORT	GPIOA3_BASE
-#define ADDR0_PIN	0x80
-
-#define ADDR1_PORT	GPIOA0_BASE
-#define ADDR1_PIN	0x02
-
-#define ADDR2_PORT	GPIOA2_BASE
-#define ADDR2_PIN	0x40
-
-#define ADDR3_PORT	GPIOA2_BASE
-#define ADDR3_PIN	0x80
-
-#define ADDR4_PORT	GPIOA3_BASE
-#define ADDR4_PIN	0x01
-
-#define COMMAND_PORT	GPIOA3_BASE
-#define COMMAND_PIN		0x10
-
 extern void PinMuxConfig(void);
 
 #endif //  __PIN_MUX_CONFIG_H__

@@ -35,8 +35,6 @@ extern volatile SockState_e _socketState;
 
 void wifi_init();
 
-uint8_t wifi_start(char *psk, int pskLen);
-
 void wifi_stop();
 
 int wifi_send(char* buffer, int size);

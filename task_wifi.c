@@ -7,6 +7,10 @@
 
 #include "task_wifi.h"
 
+#define AP_SSID "MicroCART"
+#define AP_PSK  "m1cr0cart"
+#define AP_CHANNEL  6
+
 
 /*	int task_wifi_init(void)
  * 	This function configures the simplelink system:
@@ -37,7 +41,6 @@ OsiTaskHandle _socketTaskHandle;
 void task_socket();
 int waitForClient(int listenSocket, SlSockAddr_t* clientAddr, SlSocklen_t addrLen);
 int makeSocketNonblocking(int socket);
-int getBoardNumber();
 
 
 
@@ -55,7 +58,7 @@ void wifi_init() {
 			&_socketTaskHandle);
 }
 
-uint8_t wifi_start(char *psk, int pskLen) {
+uint8_t wifi_start(char *ssid, char *psk) {
 
 	if(_apState != UNINITIALIZED) {
 		//Turn off WiFi before starting it again
@@ -76,10 +79,7 @@ uint8_t wifi_start(char *psk, int pskLen) {
 	sl_WlanSetMode(ROLE_AP);
 
 	//Generate SSID and channel number
-	char ssid[32];
-	int boardNumber = getBoardNumber();
-	sprintf(ssid, "cyBOT %d", boardNumber);
-	uint8_t channel = (boardNumber % 11) + 1;
+	uint8_t channel = AP_CHANNEL;
 
 	//Set AP specific configuration settings
 	sl_WlanSet(SL_WLAN_CFG_AP_ID, 0, strlen(ssid), (unsigned char*)ssid);	//SSID
@@ -88,7 +88,7 @@ uint8_t wifi_start(char *psk, int pskLen) {
 	//Set security settings
 	uint8_t secType = SL_SEC_TYPE_WPA_WPA2;
 	sl_WlanSet(SL_WLAN_CFG_AP_ID, WLAN_AP_OPT_SECURITY_TYPE, 1, &secType); //WPA2
-	sl_WlanSet(SL_WLAN_CFG_AP_ID, WLAN_AP_OPT_PASSWORD, pskLen, psk);
+	sl_WlanSet(SL_WLAN_CFG_AP_ID, WLAN_AP_OPT_PASSWORD, strlen(psk), psk);
 
 	/*	Use default IP settings:
 	 * 		IP:			192.168.1.1
@@ -200,6 +200,8 @@ void SimpleLinkSockEventHandler(SlSockEvent_t* event) {
 }
 
 void task_socket() {
+    wifi_start(AP_SSID, AP_PSK);
+
 	while(1) {
 		int listenSocket;
 		SlSockAddrIn_t listenAddr, clientAddr;
@@ -359,14 +361,4 @@ int makeSocketNonblocking(int socket) {
 	else {
 		return 0;
 	}
-}
-
-int getBoardNumber() {
-	int number = ( (!GPIOPinRead(ADDR4_PORT, ADDR4_PIN)) << 4 ) |
-				( (!GPIOPinRead(ADDR3_PORT, ADDR3_PIN)) << 3 ) |
-				( (!GPIOPinRead(ADDR2_PORT, ADDR2_PIN)) << 2 ) |
-				( (!GPIOPinRead(ADDR1_PORT, ADDR1_PIN)) << 1 ) |
-				( (!GPIOPinRead(ADDR0_PORT, ADDR0_PIN)) << 0 );
-
-	return number;
 }

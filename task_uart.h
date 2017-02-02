@@ -16,8 +16,6 @@
 #include "task_wifi.h"
 #include "prcm.h"
 #include "task_led.h"
-#include "command.h"
-
 
 void uart_init(void);
 
